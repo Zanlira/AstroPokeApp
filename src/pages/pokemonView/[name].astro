@@ -25,10 +25,19 @@ export const getStaticPaths = (async () => {
 const { name } = Astro.params;
 const { id } = Astro.props;
 
+const pokemondataResponse = await fetch(
+  `https://pokeapi.co/api/v2/pokemon/${id}`
+);
+if (!pokemondataResponse.ok) {
+  throw new Error("Failed to fetch Pokemon data");
+}
+const pokemonData = await pokemondataResponse.json();
+
 const audioUrl = `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${id}.ogg`;
+const shinyspriteUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/${id}.png`;
 ---
 
-<MainLayout title="hola">
+<MainLayout title={`Pokedex | ${name}`}>
   <a href="/">back</a>
   <section class="mt-10 mx-10 flex flex-col items-center justify-center">
     <div>
@@ -40,5 +49,44 @@ const audioUrl = `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pok
       <source src={audioUrl} type="audio/ogg" />
       Your browser does not support the audio element.
     </audio>
+    <img src={shinyspriteUrl} alt="Shiny Pokemon sprite" class="w-32 h-32 mt-4" />
   </section>
+  
 </MainLayout>
+
+<section class="mt-10 mx-10 flex flex-col items-center justify-center">
+  <card class="bg-slate-700 p-4 rounded-lg shadow-lg">
+    <h2 class="text-2xl font-bold">Stats</h2>
+    <ul class="list-disc pl-5">
+      {
+        pokemonData.stats.map((stat) => (
+          <li>
+            {stat.stat.name}: {stat.base_stat}
+          </li>
+        ))
+      }
+    </ul>
+  </card>
+  <section class="mt-10 mx-10 flex flex-col items-center justify-center">
+    <card class="bg-slate-700 p-4 rounded-lg shadow-lg">
+      <h2 class="text-2xl font-bold">Abilities</h2>
+      <ul class="list-disc pl-5">
+        {
+          pokemonData.abilities.map((ability) => (
+            <li>{ability.ability.name}</li>
+          ))
+        }
+      </ul>
+    </card>
+    <section class="mt-10 mx-10 flex flex-col items-center justify-center">
+      <card class="bg-slate-700 p-4 rounded-lg shadow-lg">
+        <h2 class="text-2xl font-bold">Species</h2>
+        <p>{pokemonData.species.name}</p>
+        <h2 class="text-2xl font-bold">Tipos</h2>
+        <ul class="list-disc pl-5">
+          {pokemonData.types.map((tipo) => <li>{tipo.type.name}</li>)}
+        </ul>
+      </card>
+    </section>
+  </section>
+</section>
