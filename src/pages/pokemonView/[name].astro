@@ -1,47 +1,25 @@
 ---
 import type { GetStaticPaths } from "astro";
+import type { Pokemonlistresponse } from "../../interfaces/pokemonList.response";
+
 import MainLayout from "../../layouts/MainLayout.astro";
 import PokemonCard from "../../components/pokemons/pokemonCard.astro";
 
-export const getStaticPaths = (() => {
-  return [
-    {
-      params: { name: "bulbasaur" },
-      props: { name: "bulbasaur", id: "1" },
-    },
-    {
-      params: { name: "ivysaur" },
-      props: { name: "ivysaur",id: "2" },
-    },
-    {
-      params: { name: "venusaur" },
-      props: { name: "venusaur" , id: "3"},
-    },
-    {
-      params: { name: "charmander" },
-      props: { name: "charmander", id: "4"},
-    },
-    {
-      params: { name: "charmeleon" },
-      props: { name: "charmeleon" , id: "5"},
-    },
-    {
-      params: { name: "charizard" },
-      props: { name: "charizard" , id: "6" },
-    },
-    {
-      params: { name: "squirtle" },
-      props: { name: "squirtle" , id: "7" },
-    },
-    {
-      params: { name: "wartortle" },
-      props: { name: "wartortle" , id: "8" },
-    },
-    {
-      params: { name: "blastoise" },
-      props: { name: "blastoise" , id: "9" },
-    },
-  ];
+export const getStaticPaths = (async () => {
+  const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=151");
+  if (!response.ok) {
+    throw new Error("Failed to fetch Pokemon data");
+  }
+  const pokemons = (await response.json()) as Pokemonlistresponse;
+  const pokemonList = pokemons.results;
+  const paths = pokemonList.map((pokemon) => {
+    const id = pokemon.url.split("/").slice(-2, -1)[0];
+    return {
+      params: { name: pokemon.name },
+      props: { name: pokemon.name, id },
+    };
+  });
+  return paths;
 }) satisfies GetStaticPaths;
 
 const { name } = Astro.params;
@@ -56,15 +34,11 @@ const audioUrl = `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pok
     <div>
       <h1 class="text-3xl capitalize font-bold">{name}</h1>
     </div>
-    <PokemonCard
-      name={name}
-      id={id} />
+    <PokemonCard name={name} id={id} />
 
-      <audio controls class="mt-4">
-        <source src={audioUrl} type="audio/ogg" />
-        Your browser does not support the audio element.
-      </audio>
+    <audio controls class="mt-4">
+      <source src={audioUrl} type="audio/ogg" />
+      Your browser does not support the audio element.
+    </audio>
   </section>
 </MainLayout>
-
-
