@@ -1,0 +1,14 @@
+---
+interface Props {
+    name: string;
+    id: string;
+}
+const { name, id } = Astro.props;
+const spriteUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
+
+---
+
+<a href=`pokemonView/${name}` class="flex flex-col items-center bg-slate-700 p-4 rounded-lg shadow-lg mt-2">
+    <img src={spriteUrl} alt="pokemon sprite" class="w-32 h-32" />
+    <h2 class="text-3xl font-bold capitalize">{name}</h2>
+</a>

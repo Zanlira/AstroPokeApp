@@ -1,0 +1,70 @@
+---
+import type { GetStaticPaths } from "astro";
+import MainLayout from "../../layouts/MainLayout.astro";
+import PokemonCard from "../../components/pokemons/pokemonCard.astro";
+
+export const getStaticPaths = (() => {
+  return [
+    {
+      params: { name: "bulbasaur" },
+      props: { name: "bulbasaur", id: "1" },
+    },
+    {
+      params: { name: "ivysaur" },
+      props: { name: "ivysaur",id: "2" },
+    },
+    {
+      params: { name: "venusaur" },
+      props: { name: "venusaur" , id: "3"},
+    },
+    {
+      params: { name: "charmander" },
+      props: { name: "charmander", id: "4"},
+    },
+    {
+      params: { name: "charmeleon" },
+      props: { name: "charmeleon" , id: "5"},
+    },
+    {
+      params: { name: "charizard" },
+      props: { name: "charizard" , id: "6" },
+    },
+    {
+      params: { name: "squirtle" },
+      props: { name: "squirtle" , id: "7" },
+    },
+    {
+      params: { name: "wartortle" },
+      props: { name: "wartortle" , id: "8" },
+    },
+    {
+      params: { name: "blastoise" },
+      props: { name: "blastoise" , id: "9" },
+    },
+  ];
+}) satisfies GetStaticPaths;
+
+const { name } = Astro.params;
+const { id } = Astro.props;
+
+const audioUrl = `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${id}.ogg`;
+---
+
+<MainLayout title="hola">
+  <a href="/">back</a>
+  <section class="mt-10 mx-10 flex flex-col items-center justify-center">
+    <div>
+      <h1 class="text-3xl capitalize font-bold">{name}</h1>
+    </div>
+    <PokemonCard
+      name={name}
+      id={id} />
+
+      <audio controls class="mt-4">
+        <source src={audioUrl} type="audio/ogg" />
+        Your browser does not support the audio element.
+      </audio>
+  </section>
+</MainLayout>
+
+
