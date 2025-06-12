@@ -59,7 +59,7 @@ const shinyspriteUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master
     <h2 class="text-2xl font-bold">Stats</h2>
     <ul class="list-disc pl-5">
       {
-        pokemonData.stats.map((stat) => (
+        pokemonData.stats.map((stat: { stat: { name: string }, base_stat: number }) => (
           <li>
             {stat.stat.name}: {stat.base_stat}
           </li>
@@ -72,7 +72,7 @@ const shinyspriteUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master
       <h2 class="text-2xl font-bold">Abilities</h2>
       <ul class="list-disc pl-5">
         {
-          pokemonData.abilities.map((ability) => (
+          pokemonData.abilities.map((ability: { ability: { name: string } }) => (
             <li>{ability.ability.name}</li>
           ))
         }
@@ -80,11 +80,9 @@ const shinyspriteUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master
     </card>
     <section class="mt-10 mx-10 flex flex-col items-center justify-center">
       <card class="bg-slate-700 p-4 rounded-lg shadow-lg">
-        <h2 class="text-2xl font-bold">Species</h2>
-        <p>{pokemonData.species.name}</p>
         <h2 class="text-2xl font-bold">Tipos</h2>
         <ul class="list-disc pl-5">
-          {pokemonData.types.map((tipo) => <li>{tipo.type.name}</li>)}
+          {pokemonData.types.map((tipo: { type: { name: string } }) => <li>{tipo.type.name}</li>)}
         </ul>
       </card>
     </section>
